@@ -152,106 +152,11 @@ sub vars_with_same_names {
 # }
 
 # ================================
-# Values - Strings
+# Values: See 011-values
 # ================================
 
-# NOTE: Review when needed.
-sub some_function {
-    my $ingredients = <<'END_INGREDIENTS';
-        Two eggs
-        One cup flour
-        Two ounces butter
-        One-quarter teaspoon salt
-        One cup milk
-        One drop vanilla
-        Season to taste
-        \x{00FE} will not work inside single quotes
-END_INGREDIENTS
-    say $ingredients;
-    say "\\x{00FE} is \x{00FE}";
-    say undef . ' is undef';
-    say Scalar::Util::looks_like_number(0x1234);
-}
-
 # ================================
-# Values - Numbers
-# ================================
-
-# NOTE: Review when needed.
-
-# ================================
-# Values - Undef
-# ================================
-
-# Perl's undef value represents an unassigned, undefined, and unknown value.
-# Declared but undefined scalar variables contain undef.
-
-# The defined builtin returns a true value if its operand evaluates to a defined value (anything other than undef):
-sub demo_undef {
-    my $status = 'suffering from a cold';
-
-    say defined $status;    # 1, which is a true value
-    say defined undef;      # empty string; a false value
-}
-
-# ===============================
-# Values - The Empty List
-# ================================
-
-# When used on the right-hand side of an assignment, the () construct represents an empty list.
-# In scalar context, this evaluates to undef.
-# In list context, it is an empty list.
-# When used on the left-hand side of an assignment, the () construct imposes list context.
-# Hence this idiom (Idioms) to count the number of elements returned from an expression in list context without using a temporary variable:
-# {
-#     my $count = () = get_clown_hats();
-# }
-# Because of the right associativity (Associativity) of the assignment operator,
-# Perl first evaluates the second assignment by calling get_clown_hats() in list context. This produces a list.
-# Assignment to the empty list throws away all of the values of the list,
-# but that assignment takes place in scalar context,
-# which evaluates to the number of items on the right hand side of the assignment.
-# As a result, $count contains the number of elements in the list returned from get_clown_hats().
-
-# ================================
-# Values - Lists
-# ================================
-
-# NOTE: Parentheses do not create lists.
-# The comma operator creates lists.
-# The parentheses in these examples merely group expressions to change their precedence (Precedence).
-
-# Lists and arrays are not interchangeable in Perl.
-# Lists are values. Arrays are containers.
-# You may store a list in an array and you may coerce an array to a list,
-# but they are separate entities.
-
-# For example, indexing into a list always occurs in list context.
-# Indexing into an array can occur in scalar context (for a single element) or list context (for a slice):
-sub list_vs_array {
-
-    # don't worry about the details right now
-    sub context {
-        my $context = wantarray();
-
-        say defined $context
-          ? $context
-              ? 'list'
-              : 'scalar'
-          : 'void';
-        return 0;
-    }
-
-    my @list_slice  = ( 1, 2, 3 )[ context() ];
-    my @array_slice = @list_slice[ context() ];
-    my $array_index = $array_slice[ context() ];
-
-    say context();    # list context
-    context();        # void context
-}
-
-# ================================
-# Control Flow: See 011-control-flow
+# Control Flow: See 012-control-flow
 # ================================
 
 # ================================
@@ -320,11 +225,11 @@ sub list_vs_array {
 # undef is always a false value.
 
 # ================================
-# Arrays: See 012-arrays
+# Arrays: See 013-arrays
 # ================================
 
 # ================================
-# Hashes: See 013-hashes
+# Hashes: See 014-hashes
 # ================================
 
 # ================================
@@ -580,11 +485,11 @@ package Pinball::Wizard {
 # ... and so on. This is a convention, but it's a useful one.
 
 # ================================
-# References: See 014-references
+# References: See 015-references
 # ================================
 
 # ================================
-# Nested Data Structures: See 015-nested-data-structures
+# Nested Data Structures: See 016-nested-data-structures
 # ================================
 
 done_testing();
