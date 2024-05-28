@@ -427,8 +427,9 @@ sub greet_people {
 # Perl 5.10 introduced a new construct named given as a Perlish switch statement.
 # It didn't quite work out; given is still experimental, if less buggy in newer releases.
 # Avoid it unless you know exactly what you're doing.
-# If you need a switch statement,
-# use for to alias the topic variable ($_) and when to match it against simple expressions with smart match (Smart Matching) semantics.
+# If you need a switch statement, use (for) to alias the topic variable ($_)
+# and (when) to match it against simple expressions
+# with smart match (Smart Matching) semantics.
 
 # To write the Rock, Paper, Scissors game:
 sub rock_paper_scissors {
