@@ -160,76 +160,15 @@ sub vars_with_same_names {
 # ================================
 
 # ================================
-# Scalars
-# ================================
-
-# Perl's fundamental data type is the scalar: a single, discrete value.
-# That value may be a string,
-# an integer,
-# a floating point value,
-# a filehandle,
-# or a reference—but it is always a single value.
-# Scalars may be lexical, package, or global (Global Variables) variables.
-# You may only declare lexical or package variables.
-# Scalar variables always use the leading dollar-sign ($) sigil (Variable Sigils).
-
-# A scalar variable can contain any type of scalar value without special conversions, coercions, or casts.
-# The type of value stored in a scalar variable, once assigned, can change arbitrarily:
-# {
-#     my $value;
-#     $value = 123.456;
-#     $value = 77;
-#     $value = "I am Chuck's big toe.";
-#     $value = Store::IceCream->new;
-# }
-# Even though this code is legal, changing the type of data stored in a scalar is confusing.
-
-# You may also use mathematical operations on strings:
-# {
-#     my $call_sign = 'KBMIU';
-
-#     # update sign in place and return new value
-#     my $next_sign = ++$call_sign;
-
-#     # return old value, then update sign
-#     my $curr_sign = $call_sign++;
-
-#     # but does not work as:
-#     my $new_sign = $call_sign + 1;
-# }
-
-# Evaluating a reference (References) in string context produces a string.
-# Evaluating a reference in numeric context produces a number.
-# Neither operation modifies the reference in place,
-# but you cannot recreate the reference from either result:
-# {
-#     my $authors     = [qw( Pratchett Vinge Conway )];
-#     my $stringy_ref = '' . $authors;
-#     my $numeric_ref =  0 + $authors;
-# }
-# $authors is still useful as a reference,
-# but $stringy_ref is a string with no connection to the reference
-# and $numeric_ref is a number with no connection to the reference.
-
-# To allow coercion without data loss,
-# Perl scalars can contain both numeric and string components.
-# The internal data structure which represents a scalar in Perl has a numeric slot and a string slot.
-# Accessing a string in a numeric context produces a scalar with both string and numeric values.
-
-# Scalars do not contain a separate slot for boolean values.
-# In boolean context, the empty strings ('') and '0' evaluate to false values.
-# All other strings evaluate to true values.
-# In boolean context, numbers which evaluate to zero (0, 0.0, and 0e0) evaluate to false values.
-# All other numbers evaluate to true values.
-
-# undef is always a false value.
-
-# ================================
-# Arrays: See 013-arrays
+# Scalars: See 013-scalars
 # ================================
 
 # ================================
-# Hashes: See 014-hashes
+# Arrays: See 014-arrays
+# ================================
+
+# ================================
+# Hashes: See 015-hashes
 # ================================
 
 # ================================
@@ -485,11 +424,11 @@ package Pinball::Wizard {
 # ... and so on. This is a convention, but it's a useful one.
 
 # ================================
-# References: See 015-references
+# References: See 016-references
 # ================================
 
 # ================================
-# Nested Data Structures: See 016-nested-data-structures
+# Nested Data Structures: See 017-nested-data-structures
 # ================================
 
 done_testing();
