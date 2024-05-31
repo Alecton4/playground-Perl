@@ -68,25 +68,31 @@ use Test::More;
 # Keep practicing and you'll become a native speaker.
 
 # A novice Perl hacker might triple a list of numbers with:
-# {
-#     my @tripled;
-#
-#     for (my $i = 0; $i < scalar @numbers; $i++) {
-#         $tripled[$i] = $numbers[$i] * 3;
-#     }
-# }
+{
+    my @numbers = ( 1, 2, 3 );
+    my @tripled;
+
+    for ( my $i = 0 ; $i < scalar @numbers ; $i++ ) {
+        $tripled[$i] = $numbers[$i] * 3;
+    }
+}
+
 # ... and a Perl adept might write:
-# {
-#     my @tripled;
-#
-#     for my $num (@numbers) {
-#         push @tripled, $num * 3;
-#     }
-# }
+{
+    my @numbers = ( 1, 2, 3 );
+    my @tripled;
+
+    for my $num (@numbers) {
+        push @tripled, $num * 3;
+    }
+}
+
 # ... while an experienced Perl hacker could write:
-# {
-#     my @tripled = map { $_ * 3 } @numbers;
-# }
+{
+    my @numbers = ( 1, 2, 3 );
+    my @tripled = map { $_ * 3 } @numbers;
+}
+
 # Every program gets the same result.
 # Each uses Perl in a different way.
 
@@ -123,16 +129,18 @@ use Test::More;
 
 # Why does context matter?
 # A context-aware function can examine its calling context and decide how much work it must do.
+
 # When you call a function and never use its return value,
 # you've used void context:
 # {
 #     find_chores();
 # }
-# Assigning the function's return value to a single item (Scalars)
-# enforces scalar context:
+
+# Assigning the function's return value to a single item (Scalars) enforces scalar context:
 # {
 #     my $single_result = find_chores();
 # }
+
 # Assigning the results of calling the function to an array (Arrays) or a list,
 # or using it in a list,
 # evaluates the function in list context:
@@ -160,7 +168,7 @@ use Test::More;
 #     my ($list_context) = find_chores();
 # }
 
-# Lists propagate list context to the expressions they contain.
+# NOTE: Lists propagate list context to the expressions they contain.
 # This often confuses novices until they understand it.
 # Both of these calls to find_chores() occur in list context:
 # {
@@ -198,15 +206,19 @@ use Test::More;
 # Perl will coerce values to specific proper types (Coercion)
 # depending on the operators you use.
 # For example, the eq operator tests that two values contain equivalent string values:
-# {
-#     say "Catastrophic crypto fail!" if $alice eq $bob;
-# }
+sub {
+    my $alice;
+    my $bob;
+    say "Catastrophic crypto fail!" if $alice eq $bob;
+};
+
 # You may have had a baffling experience where you know that the strings are different,
 # but they still compare the same:
-# {
-#     my $alice = 'alice';
-#     say "Catastrophic crypto fail!" if $alice == 'Bob';
-# }
+sub demo_wrong_context {
+    my $alice = 'alice';
+    say "Catastrophic crypto fail!" if $alice == 'Bob';
+}
+
 # The eq operator treats its operands as strings by enforcing string context on them,
 # but the == operator imposes numeric context.
 # In numeric context, both strings evaluate to 0 (Numeric Coercion).

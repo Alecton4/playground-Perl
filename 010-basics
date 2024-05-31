@@ -59,37 +59,50 @@ sub vars_with_same_names {
 # it implies nothing about relationships between parent and child or sibling packages.
 
 # ================================
+# Variables
+# ================================
+
+# A variable in Perl is a storage location for a value (Values).
+# While a trivial program may manipulate values directly,
+# most programs work with variables.
+# Think of this like algebra: you manipulate symbols to describe formulas.
+# It's easier to explain the Pythagorean theorem in terms of the variables a, b, and c
+# than by intuiting its principle by producing a long list of valid values.
+
+# ================================
 # Variables - Variable Scopes
 # ================================
 
 # Most variables in modern Perl programs have a lexical scope (Lexical Scope)
 # governed by the syntax of the program as written.
-# Most lexical scopes are either the contents of blocks delimited by curly braces ({ and }) or entire files.
+# Most lexical scopes are either the contents of blocks delimited by curly braces ({ and })
+# or entire files.
 
 # Files themselves provide their own lexical scopes,
 # such that a package declaration on its own does not create a new scope:
-# {
-#     package Store::Toy;
-#     my $discount = 0.10;
-#
-#     package Store::Music;
-#     say "Our current discount is $discount!";    # $discount still visible
-# }
+package Store::Toy;
+my $discount = 0.10;
+
+package Store::Music;
+say "Our current discount is $discount!";    # $discount still visible
 
 # You may also provide a block to the package declaration.
 # Because this introduces a new block, it also provides a new lexical scope:
-# {
-#     package Store::Toy {
-#         my $discount = 0.10;
-#     }
-#
-#     package Store::Music {
-#         # $discount not visible
-#     }
-#
-#     package Store::BoardGame;
-#     # $discount still not visible
-# }
+{
+
+    package Store::Toy {
+        my $discount = 0.10;
+    }
+
+    package Store::Music {
+
+        # $discount not visible
+    }
+
+    package Store::BoardGame;
+
+    # $discount still not visible
+}
 
 # ================================
 # Vriables - Variable Sigils
@@ -110,7 +123,7 @@ sub vars_with_same_names {
 # or gets coerced in an rvalue situation:
 # {
 #     # list evaluated to final element in scalar context
-#     my $element = @values[ @indices ];
+#     my $element = @values[@indices];
 # }
 
 # ================================
@@ -172,6 +185,22 @@ sub vars_with_same_names {
 # ================================
 
 # ================================
+# Coercion
+# ================================
+
+# Throughout the lifetime of a Perl variable,
+# it may contain values of different types—
+# strings, integers, rational numbers, and more.
+# Instead of attaching type information to variables,
+# Perl relies on the context provided by operators (Numeric, String, and Boolean Context)
+# to determine how to handle values.
+# By design, Perl attempts to do what you mean—
+# you may hear this referred to as DWIM for do what I mean or dwimmery.>—
+# though you must be specific about your intentions.
+# If you treat a value as a string,
+# Perl will do its best to coerce that value into a string.
+
+# ================================
 # Coercion - Boolean Coercion
 # ================================
 
@@ -215,19 +244,29 @@ sub vars_with_same_names {
 # The undefined value numifies to zero and produces a "Use of uninitialized value" warning.
 # Strings which do not begin with numeric portions numify to zero and produce an "Argument isn't numeric" warning.
 # Strings which begin with characters allowed in numeric literals numify to those values and produce no warnings,
-# such that 10 leptons leaping numifies to 10
-# and 6.022e23 moles marauding numifies to 6.022e23.
+# such that (10 leptons leaping) numifies to 10
+# and (6.022e23 moles marauding) numifies to 6.022e23.
 
 # The core module Scalar::Util contains a looks_like_number() function
 # which uses the same rules as the Perl parser to extract a number from a string.
 
-# TODO: review
-# The strings Inf and Infinity represent the infinite value and behave as numbers.
-# The string NaN represents the concept "not a number".
+# The strings (Inf) and (Infinity) represent the infinite value and behave as numbers.
+# The string (NaN) represents the concept "not a number".
+# The above strings are case-insensitive.
 # Numifying them produces no "Argument isn't numeric" warning.
 # Beware that Perl's ideas of infinity and not a number may not match your platform's ideas;
 # these notions aren't always portable across operating systems.
 # Perl is consistent even if the rest of the universe isn't.
+sub demo_inf_and_nan {
+    my $a = "inf";
+    my $b = "infinity";
+    my $c = "nan";
+
+    say $a == $b ? "true" : "false";
+    say $a eq $b ? "true" : "false";
+    say $a >= $c  ? "true" : "false";
+    say $a <= $c  ? "true" : "false";
+}
 
 # ================================
 # Coercion - Reference Coercion

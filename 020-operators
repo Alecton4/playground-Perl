@@ -62,9 +62,11 @@ use Test::More;
 # Operator Characteristics - Fixity
 # ================================
 
-# Perl novices often find confusion between the interaction of listary operators—especially function calls—and nested expressions.
+# Perl novices often find confusion between the interaction of listary operators—
+# especially function calls—
+# and nested expressions.
 # Where parentheses usually help, # ??? "Where" should be "While"?
-# beware of the parsing complexity of:
+# !!! beware of the parsing complexity of:
 # {
 #     # probably buggy code
 #     say ( 1 + 2 + 3 ) * 4;
@@ -79,14 +81,17 @@ use Test::More;
 #     Infix operators appear between their operands.
 #         Most mathematical operators are infix operators,
 #         such as the multiplication operator in $length * $width.
+#
 #     Prefix operators precede their operands. Postfix operators follow their operands.
 #         These operators tend to be unary,
 #         such as mathematic negation (-$x),
 #         boolean negation (!$y),
 #         and postfix increment ($z++).
+#
 #     Circumfix operators surround their operands,
 #         as with the anonymous hash constructor ({ ... })
 #         and quoting operators (qq[ ... ]).
+#
 #     Postcircumfix operators follow certain operands and surround others,
 #         as seen in hash and array element access ($hash{$x} and $array[$y]).
 
@@ -245,10 +250,10 @@ sub name_pet {
 
 # The infix range operator (..) produces a list of items in list context:
 {
+    # It can only produce simple, incrementing ranges of integers or strings.
     my @cards = ( 2 .. 10, 'J', 'Q', 'K', 'A' );
 }
 
-# It can only produce simple, incrementing ranges of integers or strings.
 # TODO: review
 # In boolean context, the range operator performs a flip-flop operation.
 # This operator produces a false value until its left operand is true.
@@ -275,7 +280,7 @@ sub name_pet {
 sub some_example {
 
     # implement this yourself
-    ...;
+    ...
 }
 
 done_testing();

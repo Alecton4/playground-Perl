@@ -11,7 +11,7 @@ use Test::More;
 # Perl's array data type is a language-supported aggregate which can store zero or more scalars.
 # You can access individual members of the array by integer indexes,
 # and you can add or remove elements at will.
-# Arrays grow or shrink as you manipulate them.
+# NOTE: Arrays grow or shrink as you manipulate them.
 
 # The @ sigil denotes an array. To declare an array:
 # {
