@@ -75,6 +75,11 @@ use Test::More;
 # (the return value of say multiplied by 4).
 # Perl's parser happily interprets the parentheses as postcircumfix operators denoting the arguments to say,
 # not circumfix parentheses grouping an expression to change precedence.
+# Run the following code and see what happens:
+{
+    say "foo" * 2;
+    say ("foo") * 2;
+}
 
 # An operator's fixity is its position relative to its operands:
 #
@@ -280,7 +285,7 @@ sub name_pet {
 sub some_example {
 
     # implement this yourself
-    ...
+    ...;
 }
 
 done_testing();

@@ -33,33 +33,32 @@ use Test::More;
 # A lexical variable declared in one scope is visible in that scope
 # and any scopes nested within it,
 # but is invisible to sibling or outer scopes:
+
+# outer lexical scope
 {
-    # outer lexical scope
-    {
 
-        package Robot::Butler;   # NOTE: Missing semicolon in the original book.
+    package Robot::Butler;    # NOTE: Missing semicolon in the original book.
 
-        # inner lexical scope
-        my $battery_level;
+    # inner lexical scope
+    my $battery_level;
 
-        sub tidy_room {
+    sub tidy_room {
 
-            # further inner lexical scope
-            my $timer;
+        # further inner lexical scope
+        my $timer;
 
-            do {
-                # innermost lexical scope
-                my $dustpan;
-                ...;
-            } while (@_);
+        do {
+            # innermost lexical scope
+            my $dustpan;
+            ...;
+        } while (@_);
 
-            # sibling inner lexical scope
-            for (@_) {
+        # sibling inner lexical scope
+        for (@_) {
 
-                # separate innermost scope
-                my $polish_cloth;
-                ...;
-            }
+            # separate innermost scope
+            my $polish_cloth;
+            ...;
         }
     }
 }
@@ -102,59 +101,56 @@ sub demo_lexical_subtleties {
 # Our Scope
 # ================================
 
-# TODO: review
-# Within a scope you may declare an alias to a package variable with the our builtin.
-# Like my, our enforces lexical scoping of the alias.
+# Within a scope you may declare an alias to a package variable with the (our) builtin.
+# Like (my), (our) enforces lexical scoping of the alias.
 # The fully-qualified name is available everywhere,
 # but the lexical alias is visible only within its scope.
 
-# our is most useful with package global variables such as $VERSION and $AUTOLOAD.
+# (our) is most useful with package global variables such as $VERSION and $AUTOLOAD.
 # You get a little bit of typo detection
-# (declaring a package global with our satisfies the strict pragma's vars rule),
+# (declaring a package global with our satisfies the (strict) pragma's (vars) rule),
 # but you still have to deal with a global variable.
 
+# TODO: review https://perldoc.perl.org/functions/our
+
 # ===============================
-# TODO: review Dynamic Scope
+# Dynamic Scope
 # ===============================
 
 # Dynamic scope resembles lexical scope in its visibility rules,
 # but instead of looking outward in compile-time scopes,
-# lookup traverses backwards through all of the function calls you've made
-# to reach the current code.
+# lookup traverses backwards through all of the function calls you've made to reach the current code.
 # Dynamic scope applies only to global and package global variables
 # (as lexicals aren't visible outside their scopes).
 # While a package global variable may be visible within all scopes,
-# its value may change depending on localization and assignment:
-{
-    our $scope;
+# its value may change depending on (local)ization and assignment:
+our $scope;
 
-    sub inner {
-        say $scope;
-    }
-
-    sub main {
-        say $scope;
-        local $scope = 'main() scope';
-        middle();
-    }
-
-    sub middle {
-        say $scope;
-        inner();
-    }
-
-    $scope = 'outer scope';
-    main();
+sub inner {
     say $scope;
 }
 
+sub middle {
+    say $scope;
+    inner();
+}
+
+sub main {
+    say $scope;
+    local $scope = 'main() scope';
+    middle();
+}
+
+$scope = 'outer scope';
+main();
+say $scope;
+
 # The program begins by declaring an our variable, $scope, as well as three functions.
 # It ends by assigning to $scope and calling main().
-# Within main(),
-# the program prints $scope's current value, outer scope,
+# Within main(), the program prints $scope's current value, outer scope,
 # then localizes the variable.
-# NOTE: This changes the visibility of the symbol within the current lexical scope
-# as well as in any functions called from the current lexical scope;
+# This changes the visibility of the symbol within the current lexical scope
+# NOTE: as well as in any functions called from the current lexical scope;
 # that as well as condition is what dynamic scoping does.
 # Thus, $scope contains main() scope within the body of both middle() and inner().
 # After main() returns,
@@ -163,48 +159,50 @@ sub demo_lexical_subtleties {
 # The final say prints outer scope once again.
 
 # Perl also uses different storage mechanisms for package variables and lexical variables.
-# Every scope which contains lexical variables
-# uses a data structure called a lexical pad or lexpad to store the values for its enclosed lexical variables.
+# Every scope which contains lexical variables uses a data structure
+# called a lexical pad or lexpad
+# to store the values for its enclosed lexical variables.
 # Every time control flow enters one of these scopes,
-# Perl creates another lexpad to contain the values of the lexical variables for that particular call.
+# Perl creates another lexpad
+# to contain the values of the lexical variables for that particular call.
 # This makes functions work correctly,
 # especially recursive functions (Recursion).
 
 # Each package has a single symbol table which holds package variables and well as named functions.
 # Importing (Importing) works by inspecting and manipulating this symbol table.
-# So does local.
-# This is why you may only localize global and package global variables—never lexical variables.
+# So does (local).
+# This is why you may only (local)ize global and package global variables—never lexical variables.
 
-# local is most often useful with magic variables.
+# (local) is most often useful with magic variables.
 # For example,
 # $/, the input record separator,
 # governs how much data a readline operation will read from a filehandle.
 # $!, the system error variable,
 # contains error details for the most recent system call.
-# $@, the Perl eval error variable,
-# contains any error from the most recent eval operation.
+# $@, the Perl (eval) error variable,
+# contains any error from the most recent (eval) operation.
 # $|, the autoflush variable,
-# governs whether Perl will flush the currently selected filehandle after every write operation.
+# governs whether Perl will flush the currently (select)ed filehandle after every write operation.
 
-# localizing these in the narrowest possible scope limits the effect of your changes.
+# (local)izing these in the narrowest possible scope limits the effect of your changes.
 # This can prevent strange behavior in other parts of your code.
 
 # ================================
 # State Scope
 # ================================
 
-# Perl's state keyword allows you to declare a lexical
+# Perl's (state) keyword allows you to declare a lexical
 # which has a one-time initialization as well as value persistence:
 {
 
-    sub counter {
+    sub counter_1 {
         state $count = 1;
         return $count++;
     }
 
-    say counter();
-    say counter();
-    say counter();
+    say counter_1();
+    say counter_1();
+    say counter_1();
 }
 
 # On the first call to counter,
@@ -216,14 +214,14 @@ sub demo_lexical_subtleties {
 # You may use an expression to set a state variable's initial value:
 {
 
-    sub counter_1 {
+    sub counter_2 {
         state $count = shift;
         return $count++;
     }
 
-    say counter_1(2);
-    say counter_1(4);
-    say counter_1(6);
+    say counter_2(2);
+    say counter_2(4);
+    say counter_2(6);
 }
 
 # Even though a simple reading of the code may suggest that the output should be 2, 4, and 6,
@@ -231,29 +229,29 @@ sub demo_lexical_subtleties {
 # The first call to the sub counter sets the $count variable.
 # Subsequent calls will not change its value.
 
-# state can be useful for establishing a default value or preparing a cache,
+# (state) can be useful for establishing a default value or preparing a cache,
 # but be sure to understand its initialization behavior if you use it:
 {
 
-    sub counter_2 {
+    sub counter_3 {
         state $count = shift;
         say 'Second arg is: ', shift;
         return $count++;
     }
 
-    say counter_2( 2, 'two' );
-    say counter_2( 4, 'four' );
-    say counter_2( 6, 'six' );
+    say counter_3( 2, 'two' );
+    say counter_3( 4, 'four' );
+    say counter_3( 6, 'six' );
 }
 
 # The counter for this program prints 2, 3, and 4 as expected,
-# but the values of the intended second arguments to the counter() calls are two, 4, and 6—
-# because the shift of the first argument only happens in the first call to counter().
+# NOTE: but the values of the intended second arguments to the counter() calls are two, 4, and 6—
+# because the (shift) of the first argument only happens in the first call to counter().
 # Either change the API to prevent this mistake,
 # or guard against it with:
 {
 
-    sub counter_3 {
+    sub counter_4 {
         my ( $initial_value, $text ) = @_;
 
         state $count = $initial_value;
@@ -261,9 +259,9 @@ sub demo_lexical_subtleties {
         return $count++;
     }
 
-    say counter_3( 2, 'two' );
-    say counter_3( 4, 'four' );
-    say counter_3( 6, 'six' );
+    say counter_4( 2, 'two' );
+    say counter_4( 4, 'four' );
+    say counter_4( 6, 'six' );
 }
 
 done_testing();
