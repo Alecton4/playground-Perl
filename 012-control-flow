@@ -8,6 +8,166 @@ use feature 'say';
 
 use Test::More;
 
+# Perl's basic control flow is straightforward.
+# Program execution starts at the beginning
+# (the first line of the file executed) and continues to the end:
+{
+    say 'At start';
+    say 'In middle';
+    say 'At end';
+}
+
+# Perl's control flow directives change the order of what happens next in the program.
+
+# ================================
+# Branching Directives
+# ================================
+
+# The (if) directive performs the associated action
+# only when its conditional expression evaluates to a true value:
+{
+    my $name = 'Alice';
+    say 'Hello, Bob!' if $name eq 'Bob';
+}
+
+# This postfix form is useful for simple expressions.
+# Its block form groups multiple expressions into a unit which evaluates to a single boolean value:
+# {
+#     if ($name eq 'Bob') {
+#         say 'Hello, Bob!';
+#         found_bob();
+#     }
+# }
+
+# The conditional expression may consist of multiple subexpressions
+# which will be coerced to a boolean value:
+# {
+#     if ($name eq 'Bob' && not greeted_bob()) {
+#         say 'Hello, Bob!';
+#         found_bob();
+#     }
+# }
+
+# The block form requires parentheses around its condition,
+# but the postfix form does not.
+# In the postfix form, adding parentheses can clarify the intent of the code
+# at the expense of visual cleanliness:
+# {
+#     greet_bob() if ($name eq 'Bob' && not greeted_bob());
+# }
+
+# The (unless) directive is the negated form of (if).
+# Perl will perform the action
+# when the conditional expression evaluates to a false value:
+{
+    my $name = 'Alice';
+    say "You're not Bob!" unless $name eq 'Bob';
+}
+
+# Like (if), (unless) also has a block form,
+# though many programmers avoid it due to its potential for confusion:
+# {
+#     unless (is_leap_year() and is_full_moon()) {
+#         frolic();
+#         gambol();
+#     }
+# }
+
+# (unless) works very well for postfix conditionals,
+# NOTE: especially parameter validation in functions (Postfix Parameter Validation):
+sub frolic {
+
+    # do nothing without parameters
+    return unless @_;
+
+    for my $chant (@_) { ... }
+}
+
+# The block forms of (if) and (unless) both support the (else) directive,
+# which provides a block to execute
+# when the conditional expression does not evaluate to the appropriate value:
+sub demo_if_else {
+    my $name = 'Alice';
+    if ( $name eq 'Bob' ) {
+        say 'Hi, Bob!';
+        greet_user();
+    }
+    else {
+        say "I don't know you.";
+        shun_user();
+    }
+}
+
+# (else) blocks allow you to rewrite (if) and (unless) conditionals in terms of each other:
+sub demo_unless_else {
+    my $name = 'Alice';
+    unless ( $name eq 'Bob' ) {
+        say "I don't know you.";
+        shun_user();
+    }
+    else {
+        say 'Hi, Bob!';
+        greet_user();
+    }
+}
+
+# However, the implied double negative of using unless with an else block can be confusing.
+# This example may be the only place you ever see it.
+
+# Just as Perl provides both (if) and (unless)
+# to allow you to phrase your conditionals in the most readable way,
+# Perl has both positive and negative conditional operators:
+sub demo_ne {
+    my $name = 'Alice';
+    if ( $name ne 'Bob' ) {
+        say "I don't know you.";
+        shun_user();
+    }
+    else {
+        say 'Hi, Bob!';
+        greet_user();
+    }
+}
+
+# ... though the double negative implied by the presence of the (else) block may be difficult to read.
+
+# Use one or more (elsif) directives to check multiple and mutually exclusive conditions:
+sub demo_elsif {
+    my $name = 'Alice';
+    if ( $name eq 'Robert' ) {
+        say 'Hi, Bob!';
+        greet_user();
+    }
+    elsif ( $name eq 'James' ) {
+        say 'Hi, Jim!';
+        greet_user();
+    }
+    elsif ( $name eq 'Armando' ) {
+        say 'Hi, Mando!';
+        greet_user();
+    }
+    else {
+        say "You're not my uncle.";
+        shun_user();
+    }
+}
+
+# An unless chain may also use an (elsif) block, but good luck deciphering that.
+
+# Perl supports neither (elseunless) nor (else if).
+# Larry prefers (elsif) for aesthetic reasons,
+# as well the prior art of the Ada programming language:
+# {
+#     if ($name eq 'Rick') {
+#         say 'Hi, cousin!';
+#     }
+#
+#     # warning; syntax error
+#     else if ($name eq 'Kristen') {
+#         say 'Hi, cousin-in-law!';
+#     }
+# }
+
 # ================================
 # The Ternary Conditional Operator
 # ================================
