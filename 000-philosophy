@@ -401,7 +401,7 @@ sub foo_explicit_args {
 # but consider using readline as a more readable alternative.
 # (What's more readable, glob '*.html' to <*.html>? The same idea applies.)
 
-# ARGV has one special case.
+# NOTE: ARGV has one special case.
 # If you read from the null filehandle <>,
 # Perl will treat every element in @ARGV as the name of a file to open for reading.
 # (If @ARGV is empty, Perl will read from standard input; see Input and Output.)

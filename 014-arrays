@@ -14,9 +14,9 @@ use Test::More;
 # NOTE: Arrays grow or shrink as you manipulate them.
 
 # The @ sigil denotes an array. To declare an array:
-# {
-#     my @items;
-# }
+{
+    my @items;
+}
 
 # ================================
 # Array Elements
@@ -27,20 +27,26 @@ use Test::More;
 # because postfix (Fixity) square brackets ([]) always mean indexed access to an array.
 
 # The last index of an array depends on the number of elements in the array.
-# An array in scalar context (due to scalar assignment, string concatenation, addition, or boolean context) evaluates to the number of elements in the array:
-# {
-#     # scalar assignment
-#     my $num_cats = @cats;
-#
-#     # string concatenation
-#     say 'I have ' . @cats . ' cats!';
-#
-#     # addition
-#     my $num_animals = @cats + @dogs + @fish;
-#
-#     # boolean context
-#     say 'Yep, a cat owner!' if @cats;
-# }
+# An array in scalar context
+# (due to scalar assignment, string concatenation, addition, or boolean context)
+# evaluates to the number of elements in the array:
+{
+    my @cats = qw/Tabby Tommy Cali/;
+    my @dogs = qw/Chow Mutt/;
+    my @fish = qw/Snapper Nemo/;
+
+    # scalar assignment
+    my $num_cats = @cats;
+
+    # NOTE: string concatenation
+    say 'I have ' . @cats . ' cats!';
+
+    # addition
+    my $num_animals = @cats + @dogs + @fish;
+
+    # boolean context
+    say 'Yep, a cat owner!' if @cats;
+}
 
 # To get the index of the final element of an array,
 # subtract one from the number of elements of the array (because array indexes start at 0)

@@ -78,6 +78,7 @@ use Test::More;
 # although any code which shares a lexical environment can access these values.
 # This idiom provides better encapsulation of what would otherwise be a file or package global variable:
 {
+    # within this lexical scope
     my $private_variable;
 
     sub set_private { $private_variable = shift }
@@ -90,7 +91,7 @@ use Test::More;
 # when the outer function destroys its first lexical environment.
 # Perl will warn you when this happens.
 
-# The CPAN module PadWalker lets you violate lexical encapsulation,
+# The CPAN module (PadWalker) lets you violate lexical encapsulation,
 # but anyone who uses it gets to fix any bugs that result.
 
 # ================================

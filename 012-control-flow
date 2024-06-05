@@ -400,29 +400,39 @@ sub demo_c_style_for_looping_scope {
 # this code is also an infinite loop,
 # because every iteration will evaluate @values in scalar context to a non-zero value
 # and iteration will continue:
-# {
-#     while (@values) {
-#         say $values[0];
-#     }
-# }
+sub demo_infinite_while_looping {
+
+    # my @values = qw( one two three );
+    my @values = qw();
+
+    while (@values) {
+        say $values[0];
+    }
+}
+
 # To prevent such an infinite while loop,
 # use a destructive update of the @values array by modifying the array within each iteration:
-# {
-#     while (@values) {
-#         my $value = shift @values;
-#         say $value;
-#     }
-# }
+sub demo_destructive_update {
+    my @values = qw( 1 0 2 4 );
 
-# Modifying @values inside of the while condition check also works,
+    while (@values) {
+        my $value = shift @values;
+        say $value;
+    }
+}
+
+# NOTE: Modifying @values inside of the while condition check also works,
 # but it has some subtleties related to the truthiness of each value.
-# {
-#     while (my $value = shift @values) {
-#         say $value;
-#     }
-# }
-# This loop will exit as soon as the assignment expression used as the conditional expression evaluates to a false value.
+# This loop will exit
+# as soon as the assignment expression used as the conditional expression evaluates to a false value.
 # If that's what you intend, add a comment to the code.
+sub demo_subtleties {
+    my @values = qw( 1 0 2 4 );
+
+    while ( my $value = shift @values ) {
+        say $value;
+    }
+}
 
 # The canonical use of the while loop is to iterate over input from a filehandle:
 # {
@@ -432,6 +442,7 @@ sub demo_c_style_for_looping_scope {
 #         ...
 #     }
 # }
+
 # Perl interprets this while loop as if you had written:
 # {
 #     while (defined($_ = <$fh>)) {
@@ -440,10 +451,9 @@ sub demo_c_style_for_looping_scope {
 #         ...
 #     }
 # }
-# Without the implicit defined,
+# NOTE: Without the implicit defined,
 # any line read from the filehandle which evaluated to a false value in a scalar context—
-# a blank line or a line which contained only the character 0—
-# would end the loop.
+# a blank line or a line which contained only the character 0—would end the loop.
 # The readline (<>) operator returns an undefined value only when it has reached the end of the file.
 
 # Use a do block to group several expressions into a single unit:
@@ -466,94 +476,111 @@ sub greet_people {
 # ================================
 
 # Novices commonly exhaust filehandles accidentally while nesting foreach and while loops:
-# {
-#     use autodie 'open';
-#     open my $fh, '<', $some_file;
-#
-#     for my $prefix (@prefixes) {
-#
-#         # DO NOT USE; buggy code
-#         while (<$fh>) {
-#             say $prefix, $_;
-#         }
-#     }
-# }
-# Opening the filehandle outside of the for loop leaves the file position unchanged between each iteration of the for loop.
-# On its second iteration, the while loop will have nothing to read (the readline will return a false value).
+sub demo_buggy_filehandle {
+    use autodie 'open';
+
+    open my $fh, '<', '';
+    my @prefixes = qw(John Paul Ringo);
+
+    for my $prefix (@prefixes) {
+
+        # DO NOT USE; buggy code
+        while (<$fh>) {
+            say $prefix, $_;
+        }
+    }
+}
+
+# !!! Opening the filehandle outside of the for loop
+# leaves the file position unchanged between each iteration of the for loop.
+# On its second iteration,
+# the while loop will have nothing to read (the (readline) will return a false value).
 # You can solve this problem in many ways;
 # re-open the file inside the for loop (wasteful but simple),
 # slurp the entire file into memory (works best with small files),
-# or seek the filehandle back to the beginning of the file for each iteration:
-# {
-#     for my $prefix (@prefixes) {
-#         while (<$fh>) {
-#             say $prefix, $_;
-#         }
-#
-#         seek $fh, 0, 0;
-#     }
-# }
+# or (seek) the filehandle back to the beginning of the file for each iteration:
+sub demo_seek {
+    open my $fh, '<', '';
+    my @prefixes = qw(John Paul Ringo);
+
+    for my $prefix (@prefixes) {
+        while (<$fh>) {
+            say $prefix, $_;
+        }
+
+        seek $fh, 0, 0;
+    }
+}
 
 # ================================
 # Loop Control
 # ================================
 
-# The next statement restarts the loop at its next iteration.
+# The (next) statement restarts the loop at its next iteration.
 # Use it when you've done everything you need to in the current iteration.
 
 # To loop over lines in a file and skip everything that starts with the comment character #:
-# {
-#     while (<$fh>) {
-#         next if /\A#/;
-#         ...
-#     }
-# }
+sub demo_next {
+    open my $fh, '<', '';
 
-# The last statement ends the loop immediately.
+    while (<$fh>) {
+        next if /\A#/;
+        ...;
+    }
+}
+
+# The (last) statement ends the loop immediately.
 # To finish processing a file once you've seen the ending token, write:
-# {
-#     while (<$fh>) {
-#         next if /\A#/;
-#         last if /\A__END__/
-#         ...
-#     }
-# }
+sub demo_last {
+    open my $fh, '<', '';
 
-# The redo statement restarts the current iteration without evaluating the conditional again.
+    while (<$fh>) {
+        next if /\A#/;
+        last if /\A__END__/;
+        ...;
+    }
+}
+
+# The (redo) statement restarts the current iteration without evaluating the conditional again.
 # This can be useful in those few cases where you want to modify the line you've read in place,
 # then start processing over from the beginning without clobbering it with another line.
 # To implement a silly file parser that joins lines which end with a backslash:
-# {
-#     while (my $line = <$fh>) {
-#         chomp $line;
-#
-#         # match backslash at the end of a line
-#         if ($line =~ s{\\$}{})
-#         {
-#             $line .= <$fh>;
-#             redo;
-#         }
-#
-#         ...
-#     }
-# }
+sub demo_redo {
+    open my $fh, '<', '';
+
+    while ( my $line = <$fh> ) {
+        chomp $line;
+
+        # match backslash at the end of a line
+        if ( $line =~ s{\\$}{} ) {  # BUG: There's a bug in syntax highlighting.
+            $line .= <$fh>;
+            redo;
+        }
+
+        ...;
+    }
+}
 
 # Nested loops can be confusing, especially with loop control statements.
 # If you cannot extract inner loops into named functions,
 # use loop labels to clarify your intent:
-# {
-#     LINE:
-#     while (<$fh>) {
-#         chomp;
-#
-#         PREFIX:
-#         for my $prefix (@prefixes) {
-#             next LINE unless $prefix;
-#             say "$prefix: $_";
-#             # next PREFIX is implicit here
-#         }
-#     }
-# }
+sub demo_loop_label {
+    open my $fh, '<', '';
+    my @prefixes = qw(John Paul Ringo);
+
+  LINE:
+    while (<$fh>) {
+        chomp;
+
+      PREFIX:
+        for my $prefix (@prefixes) {
+            next LINE unless $prefix;
+            say "$prefix: $_";
+
+            # next PREFIX is implicit here
+        }
+    }
+}
 
 # ================================
 # Continue
@@ -643,15 +670,15 @@ sub rock_paper_scissors {
 
 # A tailcall occurs when the last expression within a function is a call to another function.
 # The outer function's return value becomes the inner function's return value:
-# {
-#     sub log_and_greet_person {
-#         my $name = shift;
-#         log( "Greeting $name" );
+sub log_and_greet_person {
+    my $name = shift;
+    log("Greeting $name");
 
-#         return greet_person( $name );
-#     }
-# }
-# Returning from greet_person() directly to the caller of log_and_greet_person() is more efficient than
+    return greet_person($name);
+}
+
+# Returning from greet_person() directly to the caller of log_and_greet_person()
+# is more efficient than
 # returning to log_and_greet_person() and then from log_and_greet_person().
 # Returning directly from greet_person() to the caller of log_and_greet_person() is a tailcall optimization.
 
@@ -661,20 +688,19 @@ sub rock_paper_scissors {
 # Unfortunately, Perl does not automatically perform this optimization,
 # so you have to do it yourself when it's necessary.
 
-# The builtin goto operator has a form
+# The builtin (goto) operator has a form
 # which calls a function as if the current function were never called,
 # essentially erasing the bookkeeping for the new function call.
-# The ugly syntax confuses people who've heard "Never use goto", but it works:
-# {
-#     sub log_and_greet_person {
-#         my ($name) = @_;
-#         log( "Greeting $name" );
-#
-#         goto &greet_person;
-#     }
-# }
-# This example has two important characteristics.
-# First, goto &function_name or goto &$function_reference requires the use of the function sigil (&)
+# The ugly syntax confuses people who've heard "Never use (goto)", but it works:
+sub log_and_greet_person_using_goto {
+    my ($name) = @_;
+    log("Greeting $name");
+
+    goto &greet_person;
+}
+
+# NOTE: This example has two important characteristics.
+# First, (goto &function_name) or (goto &$function_reference) requires the use of the function sigil (&)
 # so that the parser knows to perform a tailcall instead of jumping to a label.
 # Second, this form of function call passes the contents of @_ implicitly to the called function.
 # You may modify @_ to change the passed arguments if you desire.
