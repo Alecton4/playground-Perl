@@ -337,7 +337,7 @@ sub demo_grep_it {
 # one operator's $_ may override another's.
 # For example, if one function uses $_ and you call it from another function which uses $_,
 # the callee may clobber the caller's value:
-sub demo_confusing {
+sub demo_clobber {
     while (<STDIN>) {
         chomp;
 
@@ -385,9 +385,8 @@ sub foo_explicit_args {
 
 # Just as $_ corresponds to the pronoun it,
 # @_ corresponds to the pronouns they and them.
-# Unlike $_, each function has a separate copy of @_.
-# The builtins shift and pop operate on @_,
-# if provided no explicit operands.
+# NOTE: Unlike $_, each function has a separate copy of @_.
+# The builtins `shift` and `pop` operate on @_, if provided no explicit operands.
 
 # Outside of all functions,
 # the default array variable @ARGV contains the command-line arguments provided to the program.

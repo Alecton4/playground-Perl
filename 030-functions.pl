@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 # REF: http://modernperlbooks.com/books/modern_perl_2016/05-perl-functions.html
+# REF: [Perl builtin functions - Perldoc Browser](https://perldoc.perl.org/functions)
+# REF: [perlfunc - Perl builtin functions - Perldoc Browser](https://perldoc.perl.org/perlfunc)
 
 use 5.034;
 use warnings;

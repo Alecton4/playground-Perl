@@ -27,8 +27,7 @@ use Test::More;
 # because postfix (Fixity) square brackets ([]) always mean indexed access to an array.
 
 # The last index of an array depends on the number of elements in the array.
-# An array in scalar context
-# (due to scalar assignment, string concatenation, addition, or boolean context)
+# An array in scalar context (due to scalar assignment, string concatenation, addition, or boolean context)
 # evaluates to the number of elements in the array:
 {
     my @cats = qw/Tabby Tommy Cali/;

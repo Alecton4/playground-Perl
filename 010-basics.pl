@@ -264,9 +264,15 @@ sub demo_inf_and_nan {
 
     say $a == $b ? "true" : "false";
     say $a eq $b ? "true" : "false";
-    say $a >= $c  ? "true" : "false";
-    say $a <= $c  ? "true" : "false";
+    say $a >= 0  ? "true" : "false";
+    say $a <= 0  ? "true" : "false";
+    say $c >= 0  ? "true" : "false";
+    say $c <= 0  ? "true" : "false";
+    say $a >= $c ? "true" : "false";
+    say $a <= $c ? "true" : "false";
 }
+
+demo_inf_and_nan();
 
 # ================================
 # Coercion - Reference Coercion

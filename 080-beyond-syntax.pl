@@ -39,6 +39,21 @@ use Test::More;
 # This convention is strong enough
 # that useful extensions such as Moops assume you will use $self as the name of object invocants.
 
+# NOTE: Review for fun.
+package MyClass v0.0.1 {
+
+    sub print_info {
+        say @_;
+        say "@_";
+    }
+}
+
+sub demo_different_calls {
+    MyClass::print_info(1);
+    MyClass->print_info(2);
+    MyClass::->print_info(3); # See 091-barewords "Good Uses of Barewords - Bareword package names"
+}
+
 # ================================
 # Idioms - Named Parameters
 # ================================
@@ -204,6 +219,8 @@ sub demo_file_slurping {
 # It's tempting to use these variables directly,
 # rather than passing values to and returning values from functions,
 # especially as programs grow.
+
+# TODO: review
 # Unfortunately, these programs may come to rely on subtleties
 # of what happens when during Perl's compilation process—
 # a variable you thought would be initialized to a specific value may not get initialized until much later.

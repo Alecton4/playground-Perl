@@ -182,7 +182,7 @@ sub demo_aliasing {
 # list context flattens the @meals array into a list unconnected to @meals.
 
 # NOTE: Review for fun.
-{
+sub fun_1 {
     my $one = 1;
     my $two = 2;
     my @arr = ( \$one, \$two );
@@ -197,6 +197,31 @@ sub demo_aliasing {
 
     say ${ @$ref[0] };   # B1
     say ${ $$ref[0] };   # B2
+}
+
+# NOTE: Review for fun.
+sub fun_2 {
+
+    # my $array_ref = \( my @arr = ( 1, 2, 3 ), 89, 64 );
+    my $array_ref = [ my @arr = ( 1, 2, 3 ), 89, 64 ];
+    push @$array_ref, qw( a b c );
+
+    local $\ = "\n\n";
+    print "@arr";
+    print "$arr[0]";
+    print "$arr[0, 2]";    # ???
+    print "@arr[0]";
+    print "@arr[0, 2]";
+    print "@arr[0..1]";
+
+    # print $$array_ref;
+    print "$array_ref";
+    print "@$array_ref";
+    print "$$array_ref[0]";
+    print "$$array_ref[0, 4]";
+    print "@$array_ref[0]";
+    print "@$array_ref[0, 4]";
+    print "@$array_ref[0..3]";
 }
 
 # ================================

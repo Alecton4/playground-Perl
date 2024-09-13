@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 # REF: http://modernperlbooks.com/books/modern_perl_2016/07-object-oriented-perl.html#T2JqZWN0cw
+# REF: [perlootut - Object-Oriented Programming in Perl Tutorial - Perldoc Browser](https://perldoc.perl.org/perlootut)
+# REF: [perlobj - Perl object reference - Perldoc Browser](https://perldoc.perl.org/perlobj)
 
 use 5.034;
 use warnings;

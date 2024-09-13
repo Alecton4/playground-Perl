@@ -37,7 +37,7 @@ use Test::More;
 }
 
 # Characters in a single-quoted string are exactly and only ever what they appear to be,
-# with two exceptions.
+# NOTE: with two exceptions.
 # To include a single quote inside a single-quoted string,
 # you must escape it with a leading backslash:
 {
@@ -111,6 +111,19 @@ use Test::More;
 # by escaping it with a leading backslash:
 {
     my $quote = "\"Ouch,\", he cried. \"That hurt!\"";
+}
+
+sub demo_single_and_double_quotes {
+    my @arr = "A" .. "Z";
+    my $i   = 4;
+    say "$arr[$i]";
+    say "${arr[$i]}";
+    say "'$arr[$i]'";
+    say "'${arr[$i]}'";
+    say '$arr[$i]';
+    say '${$arr[$i]}';
+    say '"$arr[$i]"';
+    say '"${$arr[$i]}"';
 }
 
 # Repeated backslashing sometimes becomes unwieldy.
@@ -314,6 +327,7 @@ END_INGREDIENTS
 {
     my $escaped_thorn = "\x{00FE}";
 }
+
 # Some Unicode characters have names,
 # which make them easier for other programmers to read.
 # Use the charnames pragma to enable named characters via the \N{} escape syntax:
@@ -324,11 +338,61 @@ END_INGREDIENTS
     my $escaped_thorn = "\x{00FE}";
     my $named_thorn   = "\N{LATIN SMALL LETTER THORN}";
 
-    is $escaped_thorn, $named_thorn,
-        'Thorn equivalence check';
+    is $escaped_thorn, $named_thorn, 'Thorn equivalence check';
 }
+
 # You may use the \x{} and \N{} forms within regular expressions
 # as well as anywhere else you may legitimately use a string or a character.
+
+# ================================
+# Unicode and Strings - Canonical Forms and Compatible Forms
+# ================================
+
+# REF: Learning Perl, 8th ed. P. 345
+
+# You can decompose and recompose canonical forms,
+# but you cannot necessarily recompose compatible forms.
+# If you decompose the ligature fi,
+# you get the separate graphemes f and i.
+# The recomposer has no way to know if those came from a ligature or started separately.
+# (This is why we’re ignoring NFC and NFKC.
+# Those forms decompose then recompose, but NFKC can’t necessarily recompose to the original form.)
+# Again, that’s the difference in canonical and compatible forms:
+# the canonical forms look the same either way.
+
+sub demo_canonical_and_compatible_forms {
+    use utf8;
+    use Unicode::Normalize;
+
+    # U+FB01 - fi ligature
+    # U+0065 U+0301 - decomposed é
+    # U+00E9 - composed é
+    binmode STDOUT, ':utf8';
+    my $string = "Can you \x{FB01}nd my r\x{E9}sum\x{E9}?";
+    if ( $string =~ /\x{65}\x{301}/ ) {
+        print "Oops! Matched a decomposed é\n";
+    }
+    if ( $string =~ /\x{E9}/ ) {
+        print "Yay! Matched a composed é\n";
+    }
+    my $nfd = NFD($string);
+    if ( $nfd =~ /\x{E9}/ ) {
+        print "Oops! Matched a composed é\n";
+    }
+    if ( $nfd =~ /fi/ ) {
+        print "Oops! Matched a decomposed fi\n";
+    }
+    my $nfkd = NFKD($string);
+    if ( $string =~ /fi/ ) {
+        print "Oops! Matched a decomposed fi\n";
+    }
+    if ( $nfkd =~ /fi/ ) {
+        print "Yay! Matched a decomposed fi\n";
+    }
+    if ( $nfkd =~ /\x{65}\x{301}/ ) {
+        print "Yay! Matched a decomposed é\n";
+    }
+}
 
 # ================================
 # Unicode and Strings - Implicit Conversion
@@ -433,6 +497,7 @@ END_INGREDIENTS
     # only in Perl 5.22
     my $hex_float = 0x1.0p-3;
 }
+
 # The numeric prefixes 0b, 0, and 0x specify binary, octal, and hex notation respectively.
 # Be aware that a leading zero on an integer always indicates octal mode.
 
